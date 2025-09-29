@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>霍兰德职业兴趣测试</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            color: #e2e8f0;
+        }
+
+        .container {
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            border: 1px solid rgba(94, 234, 212, 0.2);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            max-width: 600px;
+            width: 100%;
+            padding: 40px;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            color: #5eead4;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 28px;
+            text-shadow: 0 0 10px rgba(94, 234, 212, 0.3);
+        }
+
+        .intro {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #cbd5e1;
+            line-height: 1.6;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #0ea5e9 0%, #0d9488 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 30px;
+            font-size: 16px;
+            cursor: pointer;
+            display: block;
+            margin: 20px auto;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 15px rgba(14, 165, 233, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 20px rgba(14, 165, 233, 0.5);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -60%;
+            width: 20px;
+            height: 200%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: rotate(25deg);
+            transition: all 0.4s;
+        }
+
+        .btn:hover::after {
+            left: 120%;
+        }
+
+        .question-container {
+            display: none;
+        }
+
+        .progress-bar {
+            background-color: rgba(30, 41, 59, 0.7);
+            height: 10px;
+            border-radius: 5px;
+            margin-bottom: 30px;
+            overflow: hidden;
+            box-shadow: 0 0 5px rgba(14, 165, 233, 0.2);
+        }
+
+        .progress {
+            background: linear-gradient(90deg, #0ea5e9 0%, #0d9488 100%);
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease;
+            box-shadow: 0 0 10px rgba(14, 165, 233, 0.5);
+        }
+
+        .question {
+            font-size: 18px;
+            color: #f8fafc;
+            margin-bottom: 20px;
+            line-height: 1.6;
+            padding: 20px;
+            background: rgba(15, 23, 42, 0.5);
+            border-radius: 10px;
+            border: 1px solid rgba(94, 234, 212, 0.1);
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .option {
+            background: rgba(30, 41, 59, 0.7);
+            padding: 15px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(94, 234, 212, 0.1);
+            color: #e2e8f0;
+        }
+
+        .option:hover {
+            background: rgba(14, 165, 233, 0.2);
+            transform: translateX(5px);
+            border-color: rgba(94, 234, 212, 0.3);
+        }
+
+        .option.selected {
+            background: rgba(14, 165, 233, 0.3);
+            border: 1px solid #0ea5e9;
+            box-shadow: 0 0 10px rgba(14, 165, 233, 0.3);
+        }
+
+        .result-container {
+            display: none;
+            text-align: center;
+        }
+
+        .result-type {
+            font-size: 24px;
+            color: #5eead4;
+            margin-bottom: 20px;
+            font-weight: bold;
+            text-shadow: 0 0 10px rgba(94, 234, 212, 0.3);
+        }
+
+        .result-description {
+            background: rgba(15, 23, 42, 0.5);
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            text-align: left;
+            line-height: 1.8;
+            color: #e2e8f0;
+            border: 1px solid rgba(94, 234, 212, 0.1);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .result-chart {
+            margin: 30px 0;
+        }
+
+        .chart-bar {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .chart-label {
+            width: 80px;
+            text-align: right;
+            margin-right: 10px;
+            font-weight: bold;
+            color: #5eead4;
+        }
+
+        .chart-progress {
+            flex: 1;
+            height: 20px;
+            background: rgba(30, 41, 59, 0.7);
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .chart-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #0ea5e9 0%, #0d9488 100%);
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 10px;
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+            box-shadow: 0 0 10px rgba(14, 165, 233, 0.3);
+        }
+
+        .restart-btn {
+            background: linear-gradient(135deg, #0d9488 0%, #0ea5e9 100%);
+        }
+
+        .question-number {
+            text-align: center;
+            color: #5eead4;
+            margin-bottom: 20px;
+            font-size: 16px;
+            text-shadow: 0 0 5px rgba(94, 234, 212, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="intro-screen">
+            <h1>霍兰德职业兴趣测试</h1>
+            <div class="intro">
+                <p>霍兰德职业兴趣测试是由美国职业指导专家霍兰德(John Holland)根据他本人大量的职业咨询经验以及他所创立的"人格类型"理论的基础上编制的测评工具。</p>
+                <p>本测试共60道题，大约需要10-15分钟完成。请根据你的第一感觉选择最符合你的选项。</p>
+            </div>
+            <button class="btn" onclick="startTest()">开始测试</button>
+        </div>
+
+        <div class="question-container">
+            <div class="progress-bar">
+                <div class="progress" id="progress"></div>
+            </div>
+            <div class="question-number" id="questionNumber"></div>
+            <div class="question" id="question"></div>
+            <div class="options" id="options"></div>
+        </div>
+
+        <div class="result-container">
+            <h1>测试结果</h1>
+            <div class="result-type" id="resultType"></div>
+            <div class="result-chart" id="resultChart"></div>
+            <div class="result-description" id="resultDescription"></div>
+            <button class="btn restart-btn" onclick="restartTest()">重新测试</button>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            // 现实型 (R)
+            {question: "你喜欢使用工具进行修理或制作物品吗？", type: "R"},
+            {question: "你擅长机械操作和解决技术问题吗？", type: "R"},
+            {question: "你喜欢户外活动，如园艺或建筑工作吗？", type: "R"},
+            {question: "你更喜欢动手实践而不是理论学习吗？", type: "R"},
+            {question: "你喜欢组装家具或修理电器吗？", type: "R"},
+            {question: "你对汽车、机械或工具的工作原理感兴趣吗？", type: "R"},
+            {question: "你喜欢参加体育或健身活动吗？", type: "R"},
+            {question: "你擅长使用各种手工工具吗？", type: "R"},
+            {question: "你喜欢建造或制作实物吗？", type: "R"},
+            {question: "你更喜欢具体、实际的任务而不是抽象概念吗？", type: "R"},
+            {question: "你喜欢解决机械或技术故障吗？", type: "R"},
+            {question: "你对工程、建筑或制造业感兴趣吗？", type: "R"},
+
+            // 研究型 (I)
+            {question: "你喜欢阅读科学或学术文章吗？", type: "I"},
+            {question: "你擅长数学或逻辑推理吗？", type: "I"},
+            {question: "你喜欢独立思考复杂的问题吗？", type: "I"},
+            {question: "你对科学研究和实验感兴趣吗？", type: "I"},
+            {question: "你喜欢分析数据和信息吗？", type: "I"},
+            {question: "你更喜欢理论思考而不是社交活动吗？", type: "I"},
+            {question: "你对医学、生物学或化学感兴趣吗？", type: "I"},
+            {question: "你喜欢解决智力难题吗？", type: "I"},
+            {question: "你擅长观察和发现规律吗？", type: "I"},
+            {question: "你喜欢学习新知识，特别是科学概念吗？", type: "I"},
+            {question: "你更喜欢安静、独立的工作环境吗？", type: "I"},
+            {question: "你对探索未知领域充满好奇吗？", type: "I"},
+
+            // 艺术型 (A)
+            {question: "你喜欢绘画、写作或音乐等创造性活动吗？", type: "A"},
+            {question: "你有丰富的想象力和创造力吗？", type: "A"},
+            {question: "你喜欢通过艺术表达自己吗？", type: "A"},
+            {question: "你对设计、时尚或美学感兴趣吗？", type: "A"},
+            {question: "你喜欢参观艺术展览或观看演出吗？", type: "A"},
+            {question: "你擅长创意思维和非传统解决方案吗？", type: "A"},
+            {question: "你喜欢写作、讲故事或表演吗？", type: "A"},
+            {question: "你对摄影、电影或媒体制作感兴趣吗？", type: "A"},
+            {question: "你更注重个人表达而不是遵循规则吗？", type: "A"},
+            {question: "你喜欢在自由、灵活的环境中工作吗？", type: "A"},
+            {question: "你经常有新颖独特的想法吗？", type: "A"},
+            {question: "你对文化、艺术或创意产业感兴趣吗？", type: "A"},
+
+            // 社会型 (S)
+            {question: "你喜欢帮助他人解决问题吗？", type: "S"},
+            {question: "你擅长与人沟通和建立关系吗？", type: "S"},
+            {question: "你对教育、咨询或社会工作感兴趣吗？", type: "S"},
+            {question: "你喜欢团队合作而不是独自工作吗？", type: "S"},
+            {question: "你对他人的情感和需求敏感吗？", type: "S"},
+            {question: "你喜欢组织或参与社区活动吗？", type: "S"},
+            {question: "你擅长调解冲突和化解矛盾吗？", type: "S"},
+            {question: "你对心理学、教育或健康护理感兴趣吗？", type: "S"},
+            {question: "你喜欢培训或指导他人吗？", type: "S"},
+            {question: "你更愿意与人打交道而不是与物打交道吗？", type: "S"},
+            {question: "你喜欢在帮助他人的工作中获得满足感吗？", type: "S"},
+            {question: "你擅长倾听和理解他人的观点吗？", type: "S"},
+
+            // 企业型 (E)
+            {question: "你喜欢领导和影响他人吗？", type: "E"},
+            {question: "你擅长销售、谈判或说服他人吗？", type: "E"},
+            {question: "你对商业、管理或创业感兴趣吗？", type: "E"},
+            {question: "你喜欢设定目标并努力实现它们吗？", type: "E"},
+            {question: "你更愿意担任领导职务而不是跟随他人吗？", type: "E"},
+            {question: "你对市场营销、公关或管理感兴趣吗？", type: "E"},
+            {question: "你喜欢竞争并在竞争中获胜吗？", type: "E"},
+            {question: "你擅长组织和管理项目吗？", type: "E"},
+            {question: "你喜欢冒险并承担风险吗？", type: "E"},
+            {question: "你对经济和金融感兴趣吗？", type: "E"},
+            {question: "你喜欢在快节奏、充满挑战的环境中工作吗？", type: "E"},
+            {question: "你擅长制定策略和计划吗？", type: "E"},
+
+            // 常规型 (C)
+            {question: "你喜欢有明确规则和程序的工作吗？", type: "C"},
+            {question: "你擅长处理细节和数据记录吗？", type: "C"},
+            {question: "你喜欢有组织、有秩序的工作环境吗？", type: "C"},
+            {question: "你对会计、行政或文书工作感兴趣吗？", type: "C"},
+            {question: "你擅长遵循指示和完成任务吗？", type: "C"},
+            {question: "你喜欢使用计算机进行数据录入和处理吗？", type: "C"},
+            {question: "你更注重准确性和精确性吗？", type: "C"},
+            {question: "你喜欢在稳定、可预测的环境中工作吗？", type: "C"},
+            {question: "你擅长制定和维护系统与流程吗？", type: "C"},
+            {question: "你对法律、金融或政府工作感兴趣吗？", type: "C"},
+            {question: "你更喜欢支持性的角色而不是领导角色吗？", type: "C"},
+            {question: "你喜欢整理和分类信息吗？", type: "C"}
+        ];
+
+        let currentQuestion = 0;
+        let scores = {
+            R: 0, I: 0, A: 0, S: 0, E: 0, C: 0
+        };
+
+        const typeDescriptions = {
+            R: {
+                name: "现实型 (R)",
+                description: "你喜欢具体、实际的工作，擅长使用工具和机器。你通常喜欢户外工作或动手操作，不喜欢过多的社交活动。适合的职业包括工程师、机械师、建筑工人、农民等。",
+                careers: "工程师、机械师、建筑工人、农民、电工、木匠、汽车修理工、飞行员"
+            },
+            I: {
+                name: "研究型 (I)",
+                description: "你喜欢观察、学习和研究，擅长分析和解决问题。你通常喜欢独立思考，追求知识和真理。适合的职业包括科学家、医生、教授、研究员等。",
+                careers: "科学家、医生、教授、研究员、数学家、药剂师、生物学家、心理学家"
+            },
+            A: {
+                name: "艺术型 (A)",
+                description: "你有创造力，喜欢通过艺术形式表达自己。你通常富有想象力，追求美感和创新。适合的职业包括艺术家、设计师、作家、音乐家等。",
+                careers: "艺术家、设计师、作家、音乐家、演员、导演、摄影师、建筑师"
+            },
+            S: {
+                name: "社会型 (S)",
+                description: "你喜欢帮助他人，擅长与人沟通和建立关系。你通常富有同情心，喜欢教育和启发他人。适合的职业包括教师、社工、护士、咨询师等。",
+                careers: "教师、社工、护士、咨询师、心理学家、牧师、人力资源专员、客户服务代表"
+            },
+            E: {
+                name: "企业型 (E)",
+                description: "你喜欢领导和影响他人，擅长说服和管理。你通常雄心勃勃，喜欢竞争和达成目标。适合的职业包括经理、销售代表、企业家、市场营销专员等。",
+                careers: "经理、销售代表、企业家、市场营销专员、公关专员、律师、政治家、高管"
+            },
+            C: {
+                name: "常规型 (C)",
+                description: "你喜欢有秩序和结构的工作，擅长处理细节和数据。你通常可靠、精确，喜欢遵循规则和程序。适合的职业包括会计、行政助理、数据录入员、银行职员等。",
+                careers: "会计、行政助理、数据录入员、银行职员、秘书、审计员、财务分析师、图书管理员"
+            }
+        };
+
+        function startTest() {
+            document.querySelector('.intro-screen').style.display = 'none';
+            document.querySelector('.question-container').style.display = 'block';
+            showQuestion();
+        }
+
+        function showQuestion() {
+            const question = questions[currentQuestion];
+            document.getElementById('questionNumber').textContent = `第 ${currentQuestion + 1} 题 / 共 ${questions.length} 题`;
+            document.getElementById('question').textContent = question.question;
+            
+            const optionsContainer = document.getElementById('options');
+            optionsContainer.innerHTML = '';
+            
+            const options = [
+                {text: "非常喜欢", value: 3},
+                {text: "比较喜欢", value: 2},
+                {text: "一般", value: 1},
+                {text: "不喜欢", value: 0}
+            ];
+            
+            options.forEach(option => {
+                const optionDiv = document.createElement('div');
+                optionDiv.className = 'option';
+                optionDiv.textContent = option.text;
+                optionDiv.onclick = function() {
+                    selectOption(option.value);
+                };
+                optionsContainer.appendChild(optionDiv);
+            });
+            
+            updateProgress();
+        }
+
+        function selectOption(value) {
+            const question = questions[currentQuestion];
+            scores[question.type] += value;
+            
+            currentQuestion++;
+            
+            if (currentQuestion < questions.length) {
+                showQuestion();
+            } else {
+                showResult();
+            }
+        }
+
+        function updateProgress() {
+            const progress = (currentQuestion / questions.length) * 100;
+            document.getElementById('progress').style.width = progress + '%';
+        }
+
+        function showResult() {
+            document.querySelector('.question-container').style.display = 'none';
+            document.querySelector('.result-container').style.display = 'block';
+            
+            // 找出得分最高的类型
+            let maxScore = 0;
+            let primaryType = '';
+            
+            for (let type in scores) {
+                if (scores[type] > maxScore) {
+                    maxScore = scores[type];
+                    primaryType = type;
+                }
+            }
+            
+            // 显示主要类型
+            const typeInfo = typeDescriptions[primaryType];
+            document.getElementById('resultType').textContent = '你的职业性格类型是：' + typeInfo.name;
+            
+            // 创建图表
+            const chartContainer = document.getElementById('resultChart');
+            chartContainer.innerHTML = '';
+            
+            const sortedTypes = Object.entries(scores).sort((a, b) => b[1] - a[1]);
+            
+            sortedTypes.forEach(([type, score]) => {
+                const barDiv = document.createElement('div');
+                barDiv.className = 'chart-bar';
+                
+                const labelDiv = document.createElement('div');
+                labelDiv.className = 'chart-label';
+                labelDiv.textContent = type;
+                
+                const progressDiv = document.createElement('div');
+                progressDiv.className = 'chart-progress';
+                
+                const fillDiv = document.createElement('div');
+                fillDiv.className = 'chart-fill';
+                fillDiv.style.width = (score / 36 * 100) + '%';
+                fillDiv.textContent = score;
+                
+                progressDiv.appendChild(fillDiv);
+                barDiv.appendChild(labelDiv);
+                barDiv.appendChild(progressDiv);
+                chartContainer.appendChild(barDiv);
+            });
+            
+            // 显示描述
+            document.getElementById('resultDescription').innerHTML = `
+                <p><strong>类型特点：</strong></p>
+                <p>${typeInfo.description}</p>
+                <p><strong>适合职业：</strong></p>
+                <p>${typeInfo.careers}</p>
+                <p><strong>建议：</strong></p>
+                <p>选择职业时，可以优先考虑与你的性格类型相匹配的工作。但同时也要考虑你的技能、兴趣和价值观。记住，这只是一个参考，最终的决定权在你手中。</p>
+            `;
+        }
+
+        function restartTest() {
+            currentQuestion = 0;
+            scores = {
+                R: 0, I: 0, A: 0, S: 0, E: 0, C: 0
+            };
+            document.querySelector('.result-container').style.display = 'none';
+            document.querySelector('.intro-screen').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
