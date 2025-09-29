@@ -2,8 +2,8 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>霍兰德职业兴趣测试</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DISC性格测试</title>
     <style>
         * {
             margin: 0;
@@ -12,506 +12,846 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);
             min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             padding: 20px;
-            color: #e2e8f0;
+            background-attachment: fixed;
+            background-size: cover;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="2" stroke-dasharray="5,5"/></svg>');
+            opacity: 0.3;
+            z-index: -1;
         }
 
         .container {
-            background: rgba(15, 23, 42, 0.7);
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.85);
             backdrop-filter: blur(10px);
             border-radius: 20px;
-            border: 1px solid rgba(94, 234, 212, 0.2);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            max-width: 600px;
-            width: 100%;
-            padding: 40px;
-            animation: fadeIn 0.5s ease;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.5);
         }
 
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        h1 {
-            color: #5eead4;
-            text-align: center;
-            margin-bottom: 30px;
-            font-size: 28px;
-            text-shadow: 0 0 10px rgba(94, 234, 212, 0.3);
-        }
-
-        .intro {
-            text-align: center;
-            margin-bottom: 30px;
-            color: #cbd5e1;
-            line-height: 1.6;
-        }
-
-        .btn {
-            background: linear-gradient(135deg, #0ea5e9 0%, #0d9488 100%);
+        .header {
+            background: linear-gradient(45deg, #4facfe, #00f2fe);
             color: white;
-            border: none;
-            padding: 15px 40px;
-            border-radius: 30px;
-            font-size: 16px;
-            cursor: pointer;
-            display: block;
-            margin: 20px auto;
-            transition: all 0.3s ease;
-            box-shadow: 0 0 15px rgba(14, 165, 233, 0.3);
+            padding: 30px;
+            text-align: center;
             position: relative;
             overflow: hidden;
         }
 
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 0 20px rgba(14, 165, 233, 0.5);
-        }
-
-        .btn:active {
-            transform: translateY(0);
-        }
-
-        .btn::after {
+        .header::before {
             content: '';
             position: absolute;
-            top: -50%;
-            left: -60%;
-            width: 20px;
-            height: 200%;
-            background: rgba(255, 255, 255, 0.3);
-            transform: rotate(25deg);
-            transition: all 0.4s;
+            top: -10px;
+            left: -10px;
+            right: -10px;
+            bottom: -10px;
+            background: linear-gradient(45deg, rgba(79, 172, 254, 0.3), rgba(0, 242, 254, 0.3));
+            filter: blur(15px);
+            z-index: -1;
         }
 
-        .btn:hover::after {
-            left: 120%;
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
 
-        .question-container {
-            display: none;
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
         }
 
         .progress-bar {
-            background-color: rgba(30, 41, 59, 0.7);
-            height: 10px;
-            border-radius: 5px;
-            margin-bottom: 30px;
+            background: rgba(255,255,255,0.2);
+            height: 8px;
+            border-radius: 4px;
+            margin: 20px 0;
             overflow: hidden;
-            box-shadow: 0 0 5px rgba(14, 165, 233, 0.2);
         }
 
         .progress {
-            background: linear-gradient(90deg, #0ea5e9 0%, #0d9488 100%);
+            background: linear-gradient(90deg, #4facfe, #00f2fe);
             height: 100%;
             width: 0%;
             transition: width 0.3s ease;
-            box-shadow: 0 0 10px rgba(14, 165, 233, 0.5);
+            border-radius: 4px;
+            box-shadow: 0 0 10px rgba(79, 172, 254, 0.5);
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .question-section {
+            display: none;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .question-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .question {
-            font-size: 18px;
-            color: #f8fafc;
-            margin-bottom: 20px;
-            line-height: 1.6;
-            padding: 20px;
-            background: rgba(15, 23, 42, 0.5);
-            border-radius: 10px;
-            border: 1px solid rgba(94, 234, 212, 0.1);
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            border-left: 5px solid #4facfe;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+
+        .question:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+        }
+
+        .question h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.2em;
         }
 
         .options {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
         }
 
         .option {
-            background: rgba(30, 41, 59, 0.7);
-            padding: 15px 20px;
-            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            border-radius: 8px;
             cursor: pointer;
             transition: all 0.3s ease;
-            border: 1px solid rgba(94, 234, 212, 0.1);
-            color: #e2e8f0;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            background: rgba(255, 255, 255, 0.8);
         }
 
         .option:hover {
-            background: rgba(14, 165, 233, 0.2);
+            background: rgba(79, 172, 254, 0.1);
+            border-color: rgba(79, 172, 254, 0.3);
             transform: translateX(5px);
-            border-color: rgba(94, 234, 212, 0.3);
         }
 
-        .option.selected {
-            background: rgba(14, 165, 233, 0.3);
-            border: 1px solid #0ea5e9;
-            box-shadow: 0 0 10px rgba(14, 165, 233, 0.3);
+        .option input[type="radio"] {
+            margin-right: 10px;
+            transform: scale(1.2);
         }
 
-        .result-container {
+        .option input[type="radio"]:checked + label {
+            color: #4facfe;
+            font-weight: bold;
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #4facfe, #00f2fe);
+            color: white;
+            box-shadow: 0 4px 15px rgba(79, 172, 254, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(79, 172, 254, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.8);
+            color: #4facfe;
+            border: 1px solid rgba(79, 172, 254, 0.3);
+            backdrop-filter: blur(5px);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(79, 172, 254, 0.1);
+            transform: translateY(-3px);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .result-section {
             display: none;
             text-align: center;
+            padding: 40px;
+        }
+
+        .result-section.active {
+            display: block;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .result-card {
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 20px;
+            padding: 40px;
+            margin: 20px 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(5px);
+        }
+
+        .result-title {
+            font-size: 2em;
+            color: #2c3e50;
+            margin-bottom: 20px;
         }
 
         .result-type {
-            font-size: 24px;
-            color: #5eead4;
-            margin-bottom: 20px;
+            font-size: 3em;
             font-weight: bold;
-            text-shadow: 0 0 10px rgba(94, 234, 212, 0.3);
+            margin: 20px 0;
+            padding: 20px;
+            border-radius: 15px;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
+
+        .D-type { background: linear-gradient(45deg, #ff6b6b, #ff8e8e); }
+        .I-type { background: linear-gradient(45deg, #feca57, #fed330); }
+        .S-type { background: linear-gradient(45deg, #48dbfb, #0abde3); }
+        .C-type { background: linear-gradient(45deg, #1dd1a1, #10ac84); }
 
         .result-description {
-            background: rgba(15, 23, 42, 0.5);
-            padding: 30px;
-            border-radius: 15px;
-            margin-bottom: 30px;
+            font-size: 1.1em;
+            line-height: 1.6;
+            color: #34495e;
             text-align: left;
-            line-height: 1.8;
-            color: #e2e8f0;
-            border: 1px solid rgba(94, 234, 212, 0.1);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            margin: 20px 0;
         }
 
-        .result-chart {
-            margin: 30px 0;
+        .strengths-weaknesses {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
         }
 
-        .chart-bar {
-            display: flex;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-
-        .chart-label {
-            width: 80px;
-            text-align: right;
-            margin-right: 10px;
-            font-weight: bold;
-            color: #5eead4;
-        }
-
-        .chart-progress {
-            flex: 1;
-            height: 20px;
-            background: rgba(30, 41, 59, 0.7);
+        .strengths, .weaknesses {
+            background: rgba(255, 255, 255, 0.7);
+            padding: 20px;
             border-radius: 10px;
-            overflow: hidden;
+            border-left: 4px solid;
+            backdrop-filter: blur(5px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        .strengths {
+            border-left-color: #2ecc71;
+        }
+
+        .weaknesses {
+            border-left-color: #e74c3c;
+        }
+
+        .strengths h4, .weaknesses h4 {
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+
+        .strengths ul, .weaknesses ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .strengths li, .weaknesses li {
+            padding: 5px 0;
+            padding-left: 20px;
             position: relative;
-            box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
         }
 
-        .chart-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #0ea5e9 0%, #0d9488 100%);
-            transition: width 0.5s ease;
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            padding-right: 10px;
-            color: white;
-            font-size: 12px;
+        .strengths li::before {
+            content: "✓";
+            color: #2ecc71;
             font-weight: bold;
-            box-shadow: 0 0 10px rgba(14, 165, 233, 0.3);
+            position: absolute;
+            left: 0;
         }
 
-        .restart-btn {
-            background: linear-gradient(135deg, #0d9488 0%, #0ea5e9 100%);
+        .weaknesses li::before {
+            content: "⚠";
+            color: #e74c3c;
+            position: absolute;
+            left: 0;
         }
 
-        .question-number {
-            text-align: center;
-            color: #5eead4;
+        .warning {
+            background: rgba(255, 243, 205, 0.8);
+            border: 1px solid rgba(255, 234, 167, 0.5);
+            color: #856404;
+            padding: 15px;
+            border-radius: 10px;
             margin-bottom: 20px;
-            font-size: 16px;
-            text-shadow: 0 0 5px rgba(94, 234, 212, 0.3);
+            backdrop-filter: blur(5px);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                border-radius: 15px;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+            
+            .header {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .options {
+                grid-template-columns: 1fr;
+            }
+            
+            .strengths-weaknesses {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="intro-screen">
-            <h1>霍兰德职业兴趣测试</h1>
-            <div class="intro">
-                <p>霍兰德职业兴趣测试是由美国职业指导专家霍兰德(John Holland)根据他本人大量的职业咨询经验以及他所创立的"人格类型"理论的基础上编制的测评工具。</p>
-                <p>本测试共60道题，大约需要10-15分钟完成。请根据你的第一感觉选择最符合你的选项。</p>
-            </div>
-            <button class="btn" onclick="startTest()">开始测试</button>
-        </div>
-
-        <div class="question-container">
+        <div class="header">
+            <h1>DISC性格测试</h1>
+            <p>了解你的性格类型，发现更好的自己</p>
             <div class="progress-bar">
-                <div class="progress" id="progress"></div>
+                <div class="progress" id="progressBar"></div>
             </div>
-            <div class="question-number" id="questionNumber"></div>
-            <div class="question" id="question"></div>
-            <div class="options" id="options"></div>
         </div>
 
-        <div class="result-container">
-            <h1>测试结果</h1>
-            <div class="result-type" id="resultType"></div>
-            <div class="result-chart" id="resultChart"></div>
-            <div class="result-description" id="resultDescription"></div>
-            <button class="btn restart-btn" onclick="restartTest()">重新测试</button>
+        <div class="content">
+            <!-- 测试说明 -->
+            <div class="question-section active" id="intro">
+                <div class="warning">
+                    <strong>测试说明：</strong>
+                    <ul style="margin-top: 10px; padding-left: 20px;">
+                        <li>本测试共28组问题，每组包含4个描述</li>
+                        <li>请根据你的实际情况选择最符合的一项</li>
+                        <li>答案没有对错之分，请根据第一反应选择</li>
+                        <li>完成测试大约需要10-15分钟</li>
+                    </ul>
+                </div>
+                <div style="text-align: center; margin-top: 30px;">
+                    <button class="btn btn-primary" onclick="startTest()">开始测试</button>
+                </div>
+            </div>
+
+            <!-- 测试问题 -->
+            <div class="question-section" id="questions">
+                <!-- 问题将通过JavaScript动态生成 -->
+            </div>
+
+            <!-- 测试结果 -->
+            <div class="result-section" id="results">
+                <!-- 结果将通过JavaScript动态生成 -->
+            </div>
         </div>
     </div>
 
     <script>
-        const questions = [
-            // 现实型 (R)
-            {question: "你喜欢使用工具进行修理或制作物品吗？", type: "R"},
-            {question: "你擅长机械操作和解决技术问题吗？", type: "R"},
-            {question: "你喜欢户外活动，如园艺或建筑工作吗？", type: "R"},
-            {question: "你更喜欢动手实践而不是理论学习吗？", type: "R"},
-            {question: "你喜欢组装家具或修理电器吗？", type: "R"},
-            {question: "你对汽车、机械或工具的工作原理感兴趣吗？", type: "R"},
-            {question: "你喜欢参加体育或健身活动吗？", type: "R"},
-            {question: "你擅长使用各种手工工具吗？", type: "R"},
-            {question: "你喜欢建造或制作实物吗？", type: "R"},
-            {question: "你更喜欢具体、实际的任务而不是抽象概念吗？", type: "R"},
-            {question: "你喜欢解决机械或技术故障吗？", type: "R"},
-            {question: "你对工程、建筑或制造业感兴趣吗？", type: "R"},
-
-            // 研究型 (I)
-            {question: "你喜欢阅读科学或学术文章吗？", type: "I"},
-            {question: "你擅长数学或逻辑推理吗？", type: "I"},
-            {question: "你喜欢独立思考复杂的问题吗？", type: "I"},
-            {question: "你对科学研究和实验感兴趣吗？", type: "I"},
-            {question: "你喜欢分析数据和信息吗？", type: "I"},
-            {question: "你更喜欢理论思考而不是社交活动吗？", type: "I"},
-            {question: "你对医学、生物学或化学感兴趣吗？", type: "I"},
-            {question: "你喜欢解决智力难题吗？", type: "I"},
-            {question: "你擅长观察和发现规律吗？", type: "I"},
-            {question: "你喜欢学习新知识，特别是科学概念吗？", type: "I"},
-            {question: "你更喜欢安静、独立的工作环境吗？", type: "I"},
-            {question: "你对探索未知领域充满好奇吗？", type: "I"},
-
-            // 艺术型 (A)
-            {question: "你喜欢绘画、写作或音乐等创造性活动吗？", type: "A"},
-            {question: "你有丰富的想象力和创造力吗？", type: "A"},
-            {question: "你喜欢通过艺术表达自己吗？", type: "A"},
-            {question: "你对设计、时尚或美学感兴趣吗？", type: "A"},
-            {question: "你喜欢参观艺术展览或观看演出吗？", type: "A"},
-            {question: "你擅长创意思维和非传统解决方案吗？", type: "A"},
-            {question: "你喜欢写作、讲故事或表演吗？", type: "A"},
-            {question: "你对摄影、电影或媒体制作感兴趣吗？", type: "A"},
-            {question: "你更注重个人表达而不是遵循规则吗？", type: "A"},
-            {question: "你喜欢在自由、灵活的环境中工作吗？", type: "A"},
-            {question: "你经常有新颖独特的想法吗？", type: "A"},
-            {question: "你对文化、艺术或创意产业感兴趣吗？", type: "A"},
-
-            // 社会型 (S)
-            {question: "你喜欢帮助他人解决问题吗？", type: "S"},
-            {question: "你擅长与人沟通和建立关系吗？", type: "S"},
-            {question: "你对教育、咨询或社会工作感兴趣吗？", type: "S"},
-            {question: "你喜欢团队合作而不是独自工作吗？", type: "S"},
-            {question: "你对他人的情感和需求敏感吗？", type: "S"},
-            {question: "你喜欢组织或参与社区活动吗？", type: "S"},
-            {question: "你擅长调解冲突和化解矛盾吗？", type: "S"},
-            {question: "你对心理学、教育或健康护理感兴趣吗？", type: "S"},
-            {question: "你喜欢培训或指导他人吗？", type: "S"},
-            {question: "你更愿意与人打交道而不是与物打交道吗？", type: "S"},
-            {question: "你喜欢在帮助他人的工作中获得满足感吗？", type: "S"},
-            {question: "你擅长倾听和理解他人的观点吗？", type: "S"},
-
-            // 企业型 (E)
-            {question: "你喜欢领导和影响他人吗？", type: "E"},
-            {question: "你擅长销售、谈判或说服他人吗？", type: "E"},
-            {question: "你对商业、管理或创业感兴趣吗？", type: "E"},
-            {question: "你喜欢设定目标并努力实现它们吗？", type: "E"},
-            {question: "你更愿意担任领导职务而不是跟随他人吗？", type: "E"},
-            {question: "你对市场营销、公关或管理感兴趣吗？", type: "E"},
-            {question: "你喜欢竞争并在竞争中获胜吗？", type: "E"},
-            {question: "你擅长组织和管理项目吗？", type: "E"},
-            {question: "你喜欢冒险并承担风险吗？", type: "E"},
-            {question: "你对经济和金融感兴趣吗？", type: "E"},
-            {question: "你喜欢在快节奏、充满挑战的环境中工作吗？", type: "E"},
-            {question: "你擅长制定策略和计划吗？", type: "E"},
-
-            // 常规型 (C)
-            {question: "你喜欢有明确规则和程序的工作吗？", type: "C"},
-            {question: "你擅长处理细节和数据记录吗？", type: "C"},
-            {question: "你喜欢有组织、有秩序的工作环境吗？", type: "C"},
-            {question: "你对会计、行政或文书工作感兴趣吗？", type: "C"},
-            {question: "你擅长遵循指示和完成任务吗？", type: "C"},
-            {question: "你喜欢使用计算机进行数据录入和处理吗？", type: "C"},
-            {question: "你更注重准确性和精确性吗？", type: "C"},
-            {question: "你喜欢在稳定、可预测的环境中工作吗？", type: "C"},
-            {question: "你擅长制定和维护系统与流程吗？", type: "C"},
-            {question: "你对法律、金融或政府工作感兴趣吗？", type: "C"},
-            {question: "你更喜欢支持性的角色而不是领导角色吗？", type: "C"},
-            {question: "你喜欢整理和分类信息吗？", type: "C"}
+        // DISC测试题目数据
+        const discQuestions = [
+            {
+                question: "在团队工作中，你更倾向于：",
+                options: [
+                    { text: "主动承担责任，带领团队完成任务", type: "D" },
+                    { text: "积极沟通，营造和谐的团队氛围", type: "I" },
+                    { text: "认真执行分配的任务，确保工作质量", type: "S" },
+                    { text: "仔细分析工作流程，提出改进建议", type: "C" }
+                ]
+            },
+            {
+                question: "面对压力和挑战时，你通常会：",
+                options: [
+                    { text: "直接面对，迅速采取行动解决", type: "D" },
+                    { text: "寻求他人支持，通过交流缓解压力", type: "I" },
+                    { text: "保持冷静，按部就班地处理问题", type: "S" },
+                    { text: "仔细分析压力来源，制定详细应对计划", type: "C" }
+                ]
+            },
+            {
+                question: "在决策过程中，你更注重：",
+                options: [
+                    { text: "效率和结果，快速做出决定", type: "D" },
+                    { text: "团队成员的意见和感受", type: "I" },
+                    { text: "决策的稳定性和可预测性", type: "S" },
+                    { text: "数据的准确性和逻辑性", type: "C" }
+                ]
+            },
+            {
+                question: "你的沟通风格是：",
+                options: [
+                    { text: "直接明了，重点突出", type: "D" },
+                    { text: "生动有趣，富有感染力", type: "I" },
+                    { text: "温和耐心，善于倾听", type: "S" },
+                    { text: "详细准确，逻辑清晰", type: "C" }
+                ]
+            },
+            {
+                question: "在工作中，你更重视：",
+                options: [
+                    { text: "达成目标和取得成就", type: "D" },
+                    { text: "人际关系和团队协作", type: "I" },
+                    { text: "工作稳定性和安全感", type: "S" },
+                    { text: "工作质量和精确度", type: "C" }
+                ]
+            },
+            {
+                question: "面对变化时，你的反应是：",
+                options: [
+                    { text: "积极拥抱变化，主动适应", type: "D" },
+                    { text: "对变化感到兴奋，看到新机会", type: "I" },
+                    { text: "需要时间适应，希望有充分准备", type: "S" },
+                    { text: "仔细评估变化的影响和风险", type: "C" }
+                ]
+            },
+            {
+                question: "你的时间管理方式是：",
+                options: [
+                    { text: "专注于重要紧急的事务", type: "D" },
+                    { text: "灵活安排，根据心情和兴趣调整", type: "I" },
+                    { text: "按照既定计划和流程执行", type: "S" },
+                    { text: "详细规划，精确控制时间", type: "C" }
+                ]
+            },
+            {
+                question: "在解决问题时，你更倾向于：",
+                options: [
+                    { text: "立即采取行动，边做边调整", type: "D" },
+                    { text: "头脑风暴，集思广益", type: "I" },
+                    { text: "参考过往经验，寻求稳妥方案", type: "S" },
+                    { text: "深入分析，找到根本原因", type: "C" }
+                ]
+            },
+            {
+                question: "你的领导风格是：",
+                options: [
+                    { text: "权威型，明确指示和期望", type: "D" },
+                    { text: "激励型，鼓舞和带动团队", type: "I" },
+                    { text: "支持型，帮助团队成员成长", type: "S" },
+                    { text: "分析型，基于数据做决策", type: "C" }
+                ]
+            },
+            {
+                question: "在团队合作中，你通常扮演：",
+                options: [
+                    { text: "领导者和决策者的角色", type: "D" },
+                    { text: "协调者和沟通者的角色", type: "I" },
+                    { text: "执行者和支持者的角色", type: "S" },
+                    { text: "分析者和监督者的角色", type: "C" }
+                ]
+            },
+            {
+                question: "面对冲突时，你会：",
+                options: [
+                    { text: "直接面对，迅速解决", type: "D" },
+                    { text: "通过沟通和调解化解", type: "I" },
+                    { text: "避免冲突，寻求和谐", type: "S" },
+                    { text: "理性分析，找出最佳解决方案", type: "C" }
+                ]
+            },
+            {
+                question: "你的学习风格是：",
+                options: [
+                    { text: "通过实践和尝试学习", type: "D" },
+                    { text: "通过讨论和交流学习", type: "I" },
+                    { text: "通过反复练习巩固知识", type: "S" },
+                    { text: "通过深入研究和分析学习", type: "C" }
+                ]
+            },
+            {
+                question: "在制定计划时，你更注重：",
+                options: [
+                    { text: "计划的灵活性和可调整性", type: "D" },
+                    { text: "计划的创新性和吸引力", type: "I" },
+                    { text: "计划的稳定性和可靠性", type: "S" },
+                    { text: "计划的详细性和精确性", type: "C" }
+                ]
+            },
+            {
+                question: "你的创新方式是：",
+                options: [
+                    { text: "大胆尝试，勇于突破", type: "D" },
+                    { text: "联想结合，跨界思考", type: "I" },
+                    { text: "渐进改进，稳步优化", type: "S" },
+                    { text: "系统分析，逻辑推演", type: "C" }
+                ]
+            },
+            {
+                question: "在压力下，你容易：",
+                options: [
+                    { text: "变得急躁和不耐烦", type: "D" },
+                    { text: "情绪波动较大", type: "I" },
+                    { text: "过度担忧和焦虑", type: "S" },
+                    { text: "过度分析和犹豫不决", type: "C" }
+                ]
+            },
+            {
+                question: "你的职业价值观更偏向：",
+                options: [
+                    { text: "成就和影响力", type: "D" },
+                    { text: "认可和人际关系", type: "I" },
+                    { text: "稳定和安全", type: "S" },
+                    { text: "专业和精确", type: "C" }
+                ]
+            },
+            {
+                question: "在会议中，你通常是：",
+                options: [
+                    { text: "主导讨论，推动决策", type: "D" },
+                    { text: "积极参与，分享想法", type: "I" },
+                    { text: "认真记录，支持他人", type: "S" },
+                    { text: "仔细分析，提出问题", type: "C" }
+                ]
+            },
+            {
+                question: "你的风险态度是：",
+                options: [
+                    { text: "愿意承担高风险获取高回报", type: "D" },
+                    { text: "对风险持乐观态度，相信能处理好", type: "I" },
+                    { text: "倾向于规避风险，选择稳妥方案", type: "S" },
+                    { text: "需要充分评估后才决定是否承担", type: "C" }
+                ]
+            },
+            {
+                question: "在表达观点时，你更：",
+                options: [
+                    { text: "直接明确，不拐弯抹角", type: "D" },
+                    { text: "生动形象，善于举例", type: "I" },
+                    { text: "温和委婉，考虑他人感受", type: "S" },
+                    { text: "详细严谨，数据支撑", type: "C" }
+                ]
+            },
+            {
+                question: "你的工作效率受什么影响最大：",
+                options: [
+                    { text: "缺乏挑战和刺激", type: "D" },
+                    { text: "缺乏互动和认可", type: "I" },
+                    { text: "环境变化和不确定性", type: "S" },
+                    { text: "信息不完整和混乱", type: "C" }
+                ]
+            },
+            {
+                question: "在团队中，你最不能容忍：",
+                options: [
+                    { text: "效率低下和拖延", type: "D" },
+                    { text: "缺乏沟通和协作", type: "I" },
+                    { text: "不稳定和频繁变化", type: "S" },
+                    { text: "粗心和不够精确", type: "C" }
+                ]
+            },
+            {
+                question: "你的成就感主要来自：",
+                options: [
+                    { text: "达成目标和取得胜利", type: "D" },
+                    { text: "获得认可和建立关系", type: "I" },
+                    { text: "保持稳定和和谐", type: "S" },
+                    { text: "完成任务的高质量", type: "C" }
+                ]
+            },
+            {
+                question: "面对新任务，你首先会：",
+                options: [
+                    { text: "立即开始，边做边学", type: "D" },
+                    { text: "寻求指导和合作", type: "I" },
+                    { text: "了解清楚要求和流程", type: "S" },
+                    { text: "研究相关资料和标准", type: "C" }
+                ]
+            },
+            {
+                question: "你的工作优先级排序依据：",
+                options: [
+                    { text: "重要性和紧急程度", type: "D" },
+                    { text: "兴趣和人际影响", type: "I" },
+                    { text: "既定顺序和稳定性", type: "S" },
+                    { text: "逻辑顺序和准确性", type: "C" }
+                ]
+            },
+            {
+                question: "在反馈他人时，你更注重：",
+                options: [
+                    { text: "直接指出问题和改进方向", type: "D" },
+                    { text: "先肯定优点，再委婉建议", type: "I" },
+                    { text: "维护对方感受，避免伤害", type: "S" },
+                    { text: "提供具体事实和数据支撑", type: "C" }
+                ]
+            },
+            {
+                question: "你的职业规划特点是：",
+                options: [
+                    { text: "设定高远目标，快速上升", type: "D" },
+                    { text: "跟随机会，灵活调整", type: "I" },
+                    { text: "稳步发展，长期规划", type: "S" },
+                    { text: "专业精进，成为专家", type: "C" }
+                ]
+            },
+            {
+                question: "在工作中遇到瓶颈时，你会：",
+                options: [
+                    { text: "寻求新的挑战和突破", type: "D" },
+                    { text: "寻求他人帮助和支持", type: "I" },
+                    { text: "坚持努力，相信会好转", type: "S" },
+                    { text: "深入分析，找出根本原因", type: "C" }
+                ]
+            },
+            {
+                question: "你认为成功最重要的因素是：",
+                options: [
+                    { text: "决心和行动力", type: "D" },
+                    { text: "人脉和沟通能力", type: "I" },
+                    { text: "坚持和稳定性", type: "S" },
+                    { text: "专业能力和精确度", type: "C" }
+                ]
+            }
         ];
 
-        let currentQuestion = 0;
-        let scores = {
-            R: 0, I: 0, A: 0, S: 0, E: 0, C: 0
-        };
-
-        const typeDescriptions = {
-            R: {
-                name: "现实型 (R)",
-                description: "你喜欢具体、实际的工作，擅长使用工具和机器。你通常喜欢户外工作或动手操作，不喜欢过多的社交活动。适合的职业包括工程师、机械师、建筑工人、农民等。",
-                careers: "工程师、机械师、建筑工人、农民、电工、木匠、汽车修理工、飞行员"
+        // DISC性格类型详细描述
+        const discDescriptions = {
+            D: {
+                title: "支配型 (Dominance)",
+                description: "你是一个目标导向、果断坚定的人。你具有强烈的领导欲望和竞争意识，喜欢挑战和冒险，追求效率和结果。你在压力下表现出色，能够迅速做出决策并承担责任。",
+                strengths: ["领导能力强", "决策迅速", "目标导向", "勇于冒险", "抗压能力强"],
+                weaknesses: ["可能过于强势", "缺乏耐心", "容易冲动", "忽视细节", "人际关系需要改善"]
             },
             I: {
-                name: "研究型 (I)",
-                description: "你喜欢观察、学习和研究，擅长分析和解决问题。你通常喜欢独立思考，追求知识和真理。适合的职业包括科学家、医生、教授、研究员等。",
-                careers: "科学家、医生、教授、研究员、数学家、药剂师、生物学家、心理学家"
-            },
-            A: {
-                name: "艺术型 (A)",
-                description: "你有创造力，喜欢通过艺术形式表达自己。你通常富有想象力，追求美感和创新。适合的职业包括艺术家、设计师、作家、音乐家等。",
-                careers: "艺术家、设计师、作家、音乐家、演员、导演、摄影师、建筑师"
+                title: "影响型 (Influence)",
+                description: "你是一个乐观开朗、善于交际的人。你具有出色的沟通能力和感染力，喜欢被人关注，善于激励他人。你富有创造力和想象力，能够营造积极的工作氛围。",
+                strengths: ["沟通能力强", "乐观积极", "善于激励", "富有创造力", "人际关系好"],
+                weaknesses: ["可能缺乏条理", "注意力不集中", "过度乐观", "执行力需要加强", "容易受情绪影响"]
             },
             S: {
-                name: "社会型 (S)",
-                description: "你喜欢帮助他人，擅长与人沟通和建立关系。你通常富有同情心，喜欢教育和启发他人。适合的职业包括教师、社工、护士、咨询师等。",
-                careers: "教师、社工、护士、咨询师、心理学家、牧师、人力资源专员、客户服务代表"
-            },
-            E: {
-                name: "企业型 (E)",
-                description: "你喜欢领导和影响他人，擅长说服和管理。你通常雄心勃勃，喜欢竞争和达成目标。适合的职业包括经理、销售代表、企业家、市场营销专员等。",
-                careers: "经理、销售代表、企业家、市场营销专员、公关专员、律师、政治家、高管"
+                title: "稳健型 (Steadiness)",
+                description: "你是一个可靠稳重、耐心细致的人。你重视和谐稳定的关系，善于倾听和支持他人。你做事认真负责，有始有终，是团队中值得信赖的伙伴。",
+                strengths: ["稳定可靠", "善于倾听", "团队协作好", "耐心细致", "忠诚度高"],
+                weaknesses: ["抗拒变化", "决策缓慢", "缺乏主动性", "过于保守", "不善于表达自己"]
             },
             C: {
-                name: "常规型 (C)",
-                description: "你喜欢有秩序和结构的工作，擅长处理细节和数据。你通常可靠、精确，喜欢遵循规则和程序。适合的职业包括会计、行政助理、数据录入员、银行职员等。",
-                careers: "会计、行政助理、数据录入员、银行职员、秘书、审计员、财务分析师、图书管理员"
+                title: "谨慎型 (Conscientiousness)",
+                description: "你是一个精确严谨、逻辑清晰的人。你重视质量和准确性，善于分析和解决问题。你做事有条理，追求完美，是质量保证的关键人物。",
+                strengths: ["分析能力强", "精确严谨", "逻辑清晰", "质量意识高", "系统化思维"],
+                weaknesses: ["过于挑剔", "决策缓慢", "缺乏灵活性", "人际关系疏远", "完美主义倾向"]
             }
         };
 
-        function startTest() {
-            document.querySelector('.intro-screen').style.display = 'none';
-            document.querySelector('.question-container').style.display = 'block';
-            showQuestion();
-        }
+        let currentQuestion = 0;
+        let answers = [];
+        let scores = { D: 0, I: 0, S: 0, C: 0 };
 
-        function showQuestion() {
-            const question = questions[currentQuestion];
-            document.getElementById('questionNumber').textContent = `第 ${currentQuestion + 1} 题 / 共 ${questions.length} 题`;
-            document.getElementById('question').textContent = question.question;
-            
-            const optionsContainer = document.getElementById('options');
-            optionsContainer.innerHTML = '';
-            
-            const options = [
-                {text: "非常喜欢", value: 3},
-                {text: "比较喜欢", value: 2},
-                {text: "一般", value: 1},
-                {text: "不喜欢", value: 0}
-            ];
-            
-            options.forEach(option => {
-                const optionDiv = document.createElement('div');
-                optionDiv.className = 'option';
-                optionDiv.textContent = option.text;
-                optionDiv.onclick = function() {
-                    selectOption(option.value);
-                };
-                optionsContainer.appendChild(optionDiv);
-            });
-            
+        function startTest() {
+            document.getElementById('intro').classList.remove('active');
+            document.getElementById('questions').classList.add('active');
+            showQuestion();
             updateProgress();
         }
 
-        function selectOption(value) {
-            const question = questions[currentQuestion];
-            scores[question.type] += value;
+        function showQuestion() {
+            const questionsContainer = document.getElementById('questions');
+            const question = discQuestions[currentQuestion];
             
-            currentQuestion++;
+            let html = `
+                <div class="question">
+                    <h3>第 ${currentQuestion + 1} 题：${question.question}</h3>
+                    <div class="options">
+            `;
             
-            if (currentQuestion < questions.length) {
+            question.options.forEach((option, index) => {
+                html += `
+                    <div class="option">
+                        <input type="radio" id="option${index}" name="question${currentQuestion}" value="${option.type}" 
+                               onchange="selectAnswer('${option.type}')">
+                        <label for="option${index}">${option.text}</label>
+                    </div>
+                `;
+            });
+            
+            html += `
+                    </div>
+                </div>
+                <div class="navigation">
+                    <button class="btn btn-secondary" onclick="previousQuestion()" ${currentQuestion === 0 ? 'disabled' : ''}>
+                        上一题
+                    </button>
+                    <span style="align-self: center; color: #7f8c8d;">
+                        ${currentQuestion + 1} / ${discQuestions.length}
+                    </span>
+                    <button class="btn btn-primary" id="nextBtn" onclick="nextQuestion()" disabled>
+                        ${currentQuestion === discQuestions.length - 1 ? '查看结果' : '下一题'}
+                    </button>
+                </div>
+            `;
+            
+            questionsContainer.innerHTML = html;
+        }
+
+        function selectAnswer(type) {
+            answers[currentQuestion] = type;
+            document.getElementById('nextBtn').disabled = false;
+        }
+
+        function nextQuestion() {
+            if (currentQuestion < discQuestions.length - 1) {
+                currentQuestion++;
                 showQuestion();
+                updateProgress();
             } else {
-                showResult();
+                calculateResults();
+            }
+        }
+
+        function previousQuestion() {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                showQuestion();
+                updateProgress();
             }
         }
 
         function updateProgress() {
-            const progress = (currentQuestion / questions.length) * 100;
-            document.getElementById('progress').style.width = progress + '%';
+            const progress = ((currentQuestion + 1) / discQuestions.length) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
         }
 
-        function showResult() {
-            document.querySelector('.question-container').style.display = 'none';
-            document.querySelector('.result-container').style.display = 'block';
+        function calculateResults() {
+            // 重置分数
+            scores = { D: 0, I: 0, S: 0, C: 0 };
             
-            // 找出得分最高的类型
-            let maxScore = 0;
-            let primaryType = '';
-            
-            for (let type in scores) {
-                if (scores[type] > maxScore) {
-                    maxScore = scores[type];
-                    primaryType = type;
+            // 统计每种性格类型的得分
+            answers.forEach(answer => {
+                if (answer) {
+                    scores[answer]++;
                 }
-            }
-            
-            // 显示主要类型
-            const typeInfo = typeDescriptions[primaryType];
-            document.getElementById('resultType').textContent = '你的职业性格类型是：' + typeInfo.name;
-            
-            // 创建图表
-            const chartContainer = document.getElementById('resultChart');
-            chartContainer.innerHTML = '';
-            
-            const sortedTypes = Object.entries(scores).sort((a, b) => b[1] - a[1]);
-            
-            sortedTypes.forEach(([type, score]) => {
-                const barDiv = document.createElement('div');
-                barDiv.className = 'chart-bar';
-                
-                const labelDiv = document.createElement('div');
-                labelDiv.className = 'chart-label';
-                labelDiv.textContent = type;
-                
-                const progressDiv = document.createElement('div');
-                progressDiv.className = 'chart-progress';
-                
-                const fillDiv = document.createElement('div');
-                fillDiv.className = 'chart-fill';
-                fillDiv.style.width = (score / 36 * 100) + '%';
-                fillDiv.textContent = score;
-                
-                progressDiv.appendChild(fillDiv);
-                barDiv.appendChild(labelDiv);
-                barDiv.appendChild(progressDiv);
-                chartContainer.appendChild(barDiv);
             });
             
-            // 显示描述
-            document.getElementById('resultDescription').innerHTML = `
-                <p><strong>类型特点：</strong></p>
-                <p>${typeInfo.description}</p>
-                <p><strong>适合职业：</strong></p>
-                <p>${typeInfo.careers}</p>
-                <p><strong>建议：</strong></p>
-                <p>选择职业时，可以优先考虑与你的性格类型相匹配的工作。但同时也要考虑你的技能、兴趣和价值观。记住，这只是一个参考，最终的决定权在你手中。</p>
+            // 找出得分最高的类型
+            const dominantType = Object.keys(scores).reduce((a, b) => scores[a] > scores[b] ? a : b);
+            
+            // 显示结果
+            showResults(dominantType);
+        }
+
+        function showResults(dominantType) {
+            document.getElementById('questions').classList.remove('active');
+            document.getElementById('results').classList.add('active');
+            
+            const result = discDescriptions[dominantType];
+            const maxScore = Math.max(...Object.values(scores));
+            const totalQuestions = discQuestions.length;
+            const percentage = Math.round((maxScore / totalQuestions) * 100);
+            
+            let html = `
+                <div class="result-card">
+                    <h2 class="result-title">测试结果</h2>
+                    <div class="result-type ${dominantType}-type">
+                        ${result.title}
+                    </div>
+                    <div style="margin: 20px 0;">
+                        <div style="background: #ecf0f1; border-radius: 10px; padding: 10px; margin: 10px 0;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                                <span>D (支配型): ${scores.D}分</span>
+                                <span>${Math.round((scores.D / totalQuestions) * 100)}%</span>
+                            </div>
+                            <div style="background: #3498db; height: 8px; border-radius: 4px; width: ${(scores.D / totalQuestions) * 100}%"></div>
+                        </div>
+                        <div style="background: #ecf0f1; border-radius: 10px; padding: 10px; margin: 10px 0;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                                <span>I (影响型): ${scores.I}分</span>
+                                <span>${Math.round((scores.I / totalQuestions) * 100)}%</span>
+                            </div>
+                            <div style="background: #f39c12; height: 8px; border-radius: 4px; width: ${(scores.I / totalQuestions) * 100}%"></div>
+                        </div>
+                        <div style="background: #ecf0f1; border-radius: 10px; padding: 10px; margin: 10px 0;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                                <span>S (稳健型): ${scores.S}分</span>
+                                <span>${Math.round((scores.S / totalQuestions) * 100)}%</span>
+                            </div>
+                            <div style="background: #27ae60; height: 8px; border-radius: 4px; width: ${(scores.S / totalQuestions) * 100}%"></div>
+                        </div>
+                        <div style="background: #ecf0f1; border-radius: 10px; padding: 10px; margin: 10px 0;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                                <span>C (谨慎型): ${scores.C}分</span>
+                                <span>${Math.round((scores.C / totalQuestions) * 100)}%</span>
+                            </div>
+                            <div style="background: #8e44ad; height: 8px; border-radius: 4px; width: ${(scores.C / totalQuestions) * 100}%"></div>
+                        </div>
+                    </div>
+                    <div class="result-description">
+                        ${result.description}
+                    </div>
+                    <div class="strengths-weaknesses">
+                        <div class="strengths">
+                            <h4>主要优势</h4>
+                            <ul>
+                                ${result.strengths.map(strength => `<li>${strength}</li>`).join('')}
+                            </ul>
+                        </div>
+                        <div class="weaknesses">
+                            <h4>需要注意</h4>
+                            <ul>
+                                ${result.weaknesses.map(weakness => `<li>${weakness}</li>`).join('')}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div style="text-align: center; margin-top: 30px;">
+                    <button class="btn btn-primary" onclick="restartTest()">重新测试</button>
+                </div>
             `;
+            
+            document.getElementById('results').innerHTML = html;
         }
 
         function restartTest() {
             currentQuestion = 0;
-            scores = {
-                R: 0, I: 0, A: 0, S: 0, E: 0, C: 0
-            };
-            document.querySelector('.result-container').style.display = 'none';
-            document.querySelector('.intro-screen').style.display = 'block';
+            answers = [];
+            scores = { D: 0, I: 0, S: 0, C: 0 };
+            document.getElementById('results').classList.remove('active');
+            document.getElementById('intro').classList.add('active');
+            document.getElementById('progressBar').style.width = '0%';
         }
     </script>
 </body>
